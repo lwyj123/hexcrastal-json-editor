@@ -158,11 +158,11 @@ class SchemaArray extends PureComponent {
               />
             </Col>
             {!this.props.disabled ? <Col span={3} className="col-item col-item-setting">
-              <span className="adv-set" onClick={this.handleShowAdv}>
+              {/* <span className="adv-set" onClick={this.handleShowAdv}>
                 <Tooltip placement="top" title={LocaleProvider('adv_setting')}>
                   <Icon type="setting" />
                 </Tooltip>
-              </span>
+              </span> */}
 
               {items.type === 'object' ? (
                 <span onClick={this.handleAddChildField}>
@@ -353,11 +353,11 @@ class SchemaItem extends PureComponent {
             />
           </Col>
           {!this.props.disabled ? <Col span={3} className="col-item col-item-setting">
-            <span className="adv-set" onClick={this.handleShowAdv}>
+            {/* <span className="adv-set" onClick={this.handleShowAdv}>
               <Tooltip placement="top" title={LocaleProvider('adv_setting')}>
                 <Icon type="setting" />
               </Tooltip>
-            </span>
+            </span> */}
             <span className="delete-item" onClick={this.handleDeleteItem}>
               <Icon type="close" className="close" />
             </span>

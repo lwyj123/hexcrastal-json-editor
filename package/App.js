@@ -269,7 +269,6 @@ class jsonSchema extends React.Component {
       this.props.schema.type === 'object' || this.props.schema.type === 'array' ? false : true;
 
     const propsDisabled = this.props.disabled
-    console.log("propsDisabled: ", propsDisabled)
 
     return (
       <div className="json-schema-react-editor">
