@@ -133,6 +133,7 @@ class SchemaArray extends PureComponent {
             </Col>
             <Col span={4} className="col-item col-item-type">
               <Select
+                disabled={this.props.disabled}
                 name="itemtype"
                 className="type-select-style"
                 onChange={this.handleChangeType}

@@ -182,6 +182,7 @@ class SchemaString extends PureComponent {
           </Col>
           <Col span={20}>
             <Select
+              disabled={this.props.disabled}
               showSearch
               style={{ width: 150 }}
               value={data.format}
@@ -431,6 +432,7 @@ const SchemaBoolean = (props, context) => {
         </Col>
         <Col span={20}>
           <Select
+            disabled={this.props.disabled}
             value={value}
             onChange={e =>
               changeOtherValue(
