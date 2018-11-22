@@ -26,14 +26,14 @@ const InputGroup = Input.Group;
 import LocaleProvider from '../LocalProvider/index.js';
 import utils from '../../utils';
 
-const mapping = (name, data, showEdit, showAdv) => {
+const mapping = (name, data, showEdit, showAdv, disabled=false) => {
   switch (data.type) {
     case 'array':
-      return <SchemaArray prefix={name} data={data} showEdit={showEdit} showAdv={showAdv} />;
+      return <SchemaArray disabled={disabled} prefix={name} data={data} showEdit={showEdit} showAdv={showAdv} />;
       break;
     case 'object':
       let nameArray = [].concat(name, 'properties');
-      return <SchemaObject prefix={nameArray} data={data} showEdit={showEdit} showAdv={showAdv} />;
+      return <SchemaObject disabled={disabled} prefix={nameArray} data={data} showEdit={showEdit} showAdv={showAdv} />;
       break;
     default:
       return null;
@@ -99,7 +99,7 @@ class SchemaArray extends PureComponent {
   };
 
   render() {
-    const { data, prefix, showEdit, showAdv } = this.props;
+    const { data, prefix, showEdit, showAdv, disabled } = this.props;
     const items = data.items;
     let prefixArray = [].concat(prefix, 'items');
 
@@ -149,13 +149,14 @@ class SchemaArray extends PureComponent {
             </Col>
             <Col span={5} className="col-item col-item-desc">
               <Input
-                addonAfter={<Icon type="edit" onClick={() => this.handleShowEdit('description')} />}
+                disabled={disabled}
+                addonAfter={!this.props.disabled ? <Icon type="edit" onClick={() => this.handleShowEdit('description')} /> : null }
                 placeholder={LocaleProvider('description')}
                 value={items.description}
                 onChange={this.handleChangeDesc}
               />
             </Col>
-            <Col span={3} className="col-item col-item-setting">
+            {!this.props.disabled ? <Col span={3} className="col-item col-item-setting">
               <span className="adv-set" onClick={this.handleShowAdv}>
                 <Tooltip placement="top" title={LocaleProvider('adv_setting')}>
                   <Icon type="setting" />
@@ -169,9 +170,9 @@ class SchemaArray extends PureComponent {
                   </Tooltip>
                 </span>
               ) : null}
-            </Col>
+            </Col> : null }
           </Row>
-          <div className="option-formStyle">{mapping(prefixArray, items, showEdit, showAdv)}</div>
+          <div className="option-formStyle">{mapping(prefixArray, items, showEdit, showAdv, disabled)}</div>
         </div>
       )
     );
@@ -307,9 +308,11 @@ class SchemaItem extends PureComponent {
               </Col>
               <Col span={22}>
                 <Input
+                  disabled={this.props.disabled}
                   addonAfter={
                     <Tooltip placement="top" title={LocaleProvider('required')}>
                       <Checkbox
+                        disabled={this.props.disabled}
                         onChange={this.handleEnableRequire}
                         checked={
                           _.isUndefined(data.required) ? false : data.required.indexOf(name) != -1
@@ -325,6 +328,7 @@ class SchemaItem extends PureComponent {
           </Col>
           <Col span={4} className="col-item col-item-type">
             <Select
+              disabled={this.props.disabled}
               className="type-select-style"
               onChange={this.handleChangeType}
               value={value.type}
@@ -340,13 +344,14 @@ class SchemaItem extends PureComponent {
           </Col>
           <Col span={5} className="col-item col-item-desc">
             <Input
-              addonAfter={<Icon type="edit" onClick={() => this.handleShowEdit('description')} />}
+              disabled={this.props.disabled}
+              addonAfter={!this.props.disabled ? <Icon type="edit" onClick={() => this.handleShowEdit('description')} /> : null}
               placeholder={LocaleProvider('description')}
               value={value.description}
               onChange={this.handleChangeDesc}
             />
           </Col>
-          <Col span={3} className="col-item col-item-setting">
+          {!this.props.disabled ? <Col span={3} className="col-item col-item-setting">
             <span className="adv-set" onClick={this.handleShowAdv}>
               <Tooltip placement="top" title={LocaleProvider('adv_setting')}>
                 <Icon type="setting" />
@@ -364,9 +369,9 @@ class SchemaItem extends PureComponent {
                 </Tooltip>
               </span>
             )}
-          </Col>
+          </Col> : null}
         </Row>
-        <div className="option-formStyle">{mapping(prefixArray, value, showEdit, showAdv)}</div>
+        <div className="option-formStyle">{mapping(prefixArray, value, showEdit, showAdv, this.props.disabled)}</div>
       </div>
     ) : null;
   }
@@ -395,6 +400,7 @@ class SchemaObjectComponent extends Component {
       <div className="object-style">
         {Object.keys(data.properties).map((name, index) => (
           <SchemaItem
+            disabled={this.props.disabled}
             key={index}
             data={this.props.data}
             name={name}
@@ -447,7 +453,7 @@ DropPlus.contextTypes = {
 };
 
 const SchemaJson = props => {
-  const item = mapping([], props.data, props.showEdit, props.showAdv);
+  const item = mapping([], props.data, props.showEdit, props.showAdv, props.disabled);
   return <div className="schema-content">{item}</div>;
 };
 

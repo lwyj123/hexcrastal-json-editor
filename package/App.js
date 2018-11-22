@@ -91,7 +91,19 @@ class jsonSchema extends React.Component {
       data = `{
         "type": "object",
         "title": "empty object",
-        "properties":{}
+        "properties":{
+          "id": {
+            "type": "string"
+          },
+          "nested": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
       }`;
     }
     this.Model.changeEditorSchemaAction({ value: JSON.parse(data) });
@@ -256,6 +268,9 @@ class jsonSchema extends React.Component {
     let disabled =
       this.props.schema.type === 'object' || this.props.schema.type === 'array' ? false : true;
 
+    const propsDisabled = this.props.disabled
+    console.log("propsDisabled: ", propsDisabled)
+
     return (
       <div className="json-schema-react-editor">
         <Modal
@@ -318,7 +333,7 @@ class jsonSchema extends React.Component {
                         <Tooltip placement="top" title={'checked_all'}>
                           <Checkbox
                             checked={checked}
-                            disabled={disabled}
+                            disabled={disabled || this.props.disabled}
                             onChange={e => this.changeCheckBox(e.target.checked)}
                           />
                         </Tooltip>
@@ -333,6 +348,7 @@ class jsonSchema extends React.Component {
                 <Select
                   className="type-select-style"
                   onChange={e => this.changeType(`type`, e)}
+                  disabled={this.props.disabled}
                   value={schema.type || 'object'}
                 >
                   {SCHEMA_TYPE.map((item, index) => {
@@ -346,37 +362,38 @@ class jsonSchema extends React.Component {
               </Col>
               <Col span={5} className="col-item col-item-desc">
                 <Input
-                  addonAfter={
-                    <Icon
+                  disabled={this.props.disabled}
+                  addonAfter=
+                    {!this.props.disabled ? <Icon
                       type="edit"
                       onClick={() =>
                         this.showEdit([], 'description', this.props.schema.description)
                       }
-                    />
-                  }
+                    /> : null}
                   placeholder={'description'}
                   value={schema.description}
                   onChange={e => this.changeValue(['description'], e.target.value)}
                 />
               </Col>
-              <Col span={3} className="col-item col-item-setting">
+              {!this.props.disabled ? <Col span={3} className="col-item col-item-setting">
                 <span className="adv-set" onClick={() => this.showAdv([], this.props.schema)}>
                   <Tooltip placement="top" title={LocalProvider('adv_setting')}>
                     <Icon type="setting" />
                   </Tooltip>
                 </span>
-                {schema.type === 'object' ? (
+                {schema.type === 'object' && !this.props.disabled ? (
                   <span onClick={() => this.addChildField('properties')}>
                     <Tooltip placement="top" title={LocalProvider('add_child_node')}>
                       <Icon type="plus" className="plus" />
                     </Tooltip>
                   </span>
                 ) : null}
-              </Col>
+              </Col> : null }
             </Row>
             {this.state.show && (
               <SchemaJson
                 data={this.props.schema}
+                disabled={this.props.disabled}
                 showEdit={this.showEdit}
                 showAdv={this.showAdv}
               />
@@ -392,9 +409,11 @@ jsonSchema.childContextTypes = {
   getOpenValue: PropTypes.func,
   changeCustomValue: PropTypes.func,
   Model: PropTypes.object,
+  disabled: PropTypes.bool,
 };
 
 jsonSchema.propTypes = {
+  disabled: PropTypes.bool,
   data: PropTypes.string,
   onChange: PropTypes.func,
   Model: PropTypes.object

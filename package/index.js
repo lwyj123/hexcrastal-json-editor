@@ -30,6 +30,7 @@ module.exports = (config = {})=>{
   Component.propTypes = {
     data: PropTypes.string,
     onChange: PropTypes.func,
+    disabled: PropTypes.bool,
   }
   return Component;
 
