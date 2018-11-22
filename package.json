@@ -1,6 +1,6 @@
 {
-  "name": "json-schema-editor-visual",
-  "version": "1.0.21",
+  "name": "hexcrystal-json-editor",
+  "version": "1.0.0",
   "description": "jsonschema editor",
   "main": "package/index.js",
   "license": "MIC",
