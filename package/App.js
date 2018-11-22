@@ -20,7 +20,6 @@ const { TextArea } = Input;
 const TabPane = Tabs.TabPane;
 
 import './index.css';
-import AceEditor from './components/AceEditor/AceEditor.js';
 import _ from 'underscore';
 import { connect } from 'react-redux';
 import SchemaJson from './components/SchemaComponents/SchemaJson.js';
@@ -31,7 +30,6 @@ const GenerateSchema = require('generate-schema/src/schemas/json.js');
 const utils = require('./utils');
 import CustomItem from './components/SchemaComponents/SchemaOther.js';
 import LocalProvider from './components/LocalProvider/index.js';
-import MockSelect from './components/MockSelect/index.js';
 
 
 
@@ -49,20 +47,13 @@ class jsonSchema extends React.Component {
       itemKey: [],
       curItemCustomValue: null,
       checked: false,
-      editorModalName: '', // 弹窗名称desctiption | mock
-      mock: ''
+      editorModalName: '', // 弹窗名称desctiption
     };
     this.Model = this.props.Model.schema;
     this.jsonSchemaData = null;
     this.jsonData = null;
   }
 
-  // json 导入弹窗
-  showModal = () => {
-    this.setState({
-      visible: true
-    });
-  };
   handleOk = () => {
     if (this.importJsonType !== 'schema') {
       if (!this.jsonData) {
@@ -113,7 +104,6 @@ class jsonSchema extends React.Component {
       },
       changeCustomValue: this.changeCustomValue,
       Model: this.props.Model,
-      isMock: this.props.isMock
     };
   }
 
@@ -164,21 +154,15 @@ class jsonSchema extends React.Component {
 
   // 修改备注信息
   changeValue = (key, value) => {
-    if (key[0] === 'mock') {
-      value = value ? { mock: value } : '';
-    }
     this.Model.changeValueAction({ key, value });
   };
 
-  // 备注/mock弹窗 点击ok 时
+  // 备注弹窗 点击ok 时
   handleEditOk = name => {
     this.setState({
       editVisible: false
     });
     let value = this.state[name];
-    if (name === 'mock') {
-      value = value ? { mock: value } : '';
-    }
     this.Model.changeValueAction({ key: this.state.descriptionKey, value });
   };
 
@@ -274,58 +258,11 @@ class jsonSchema extends React.Component {
 
     return (
       <div className="json-schema-react-editor">
-        <Button className="import-json-button" type="primary" onClick={this.showModal}>
-          {LocalProvider('import_json')}
-        </Button>
-        <Modal
-          maskClosable={false}
-          visible={visible}
-          title={LocalProvider('import_json')}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          className="json-schema-react-editor-import-modal"
-          okText={'ok'}
-          cancelText={LocalProvider('cancel')}
-          footer={[
-            <Button key="back" onClick={this.handleCancel}>
-              {LocalProvider('cancel')}
-            </Button>,
-            <Button key="submit" type="primary" onClick={this.handleOk}>
-              {LocalProvider('ok')}
-            </Button>
-          ]}
-        >
-          <Tabs
-            defaultActiveKey="json"
-            onChange={key => {
-              this.importJsonType = key;
-            }}
-          >
-            <TabPane tab="JSON" key="json">
-              <AceEditor data="" mode="json" onChange={this.handleImportJson} />
-            </TabPane>
-            <TabPane tab="JSON-SCHEMA" key="schema">
-              <AceEditor data="" mode="json" onChange={this.handleImportJsonSchema} />
-            </TabPane>
-          </Tabs>
-        </Modal>
-
         <Modal
           title={
             <div>
               {LocalProvider(editorModalName)}
               &nbsp;
-              {editorModalName === 'mock' && (
-                <Tooltip title={LocalProvider('mockLink')}>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://yapi.ymfe.org/documents/mock.html#方式2.-json-schema"
-                  >
-                    <Icon type="question-circle-o" />
-                  </a>
-                </Tooltip>
-              )}
             </div>
           }
           maskClosable={false}
@@ -360,19 +297,9 @@ class jsonSchema extends React.Component {
         )}
 
         <Row>
-          {this.props.showEditor && (
-            <Col span={8}>
-              <AceEditor
-                className="pretty-editor"
-                mode="json"
-                data={JSON.stringify(schema, null, 2)}
-                onChange={this.handleParams}
-              />
-            </Col>
-          )}
-          <Col span={this.props.showEditor ? 16 : 24} className="wrapper object-style">
+          <Col span={24} className="wrapper object-style">
             <Row type="flex" align="middle">
-              <Col span={this.props.isMock ? 10 : 12} className="col-item name-item col-item-name">
+              <Col span={12} className="col-item name-item col-item-name">
                 <Row type="flex" justify="space-around" align="middle">
                   <Col span={2} className="down-style-col">
                     {schema.type === 'object' ? (
@@ -417,16 +344,7 @@ class jsonSchema extends React.Component {
                   })}
                 </Select>
               </Col>
-              {this.props.isMock && (
-                <Col span={3} className="col-item col-item-mock">
-                  <MockSelect
-                    schema={schema}
-                    showEdit={() => this.showEdit([], 'mock', schema.mock, schema.type)}
-                    onChange={value => this.changeValue(['mock'], value)}
-                  />
-                </Col>
-              )}
-              <Col span={this.props.isMock ? 4 : 5} className="col-item col-item-desc">
+              <Col span={5} className="col-item col-item-desc">
                 <Input
                   addonAfter={
                     <Icon
@@ -474,14 +392,11 @@ jsonSchema.childContextTypes = {
   getOpenValue: PropTypes.func,
   changeCustomValue: PropTypes.func,
   Model: PropTypes.object,
-  isMock: PropTypes.bool
 };
 
 jsonSchema.propTypes = {
   data: PropTypes.string,
   onChange: PropTypes.func,
-  showEditor: PropTypes.bool,
-  isMock: PropTypes.bool,
   Model: PropTypes.object
 };
 

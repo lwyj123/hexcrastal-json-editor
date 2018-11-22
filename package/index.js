@@ -19,12 +19,6 @@ module.exports = (config = {})=>{
     Model.__jsonSchemaFormat = utils.format
   }
 
-  if(config.mock) {
-    Model.__jsonSchemaMock = config.mock
-  }
-
-  
-
   const store = Model.getStore();
 
   const Component = (props)=>{
@@ -36,7 +30,6 @@ module.exports = (config = {})=>{
   Component.propTypes = {
     data: PropTypes.string,
     onChange: PropTypes.func,
-    showEditor: PropTypes.bool
   }
   return Component;
 

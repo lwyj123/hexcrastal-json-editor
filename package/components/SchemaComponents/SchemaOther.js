@@ -1,29 +1,20 @@
 import React, { PureComponent } from 'react';
 import {
-  Dropdown,
-  Menu,
   Input,
   InputNumber,
   Row,
   Col,
-  Form,
   Select,
   Checkbox,
-  Button,
   Icon,
-  Modal,
-  message,
   Tooltip,
   Switch
 } from 'antd';
 const { TextArea } = Input;
 import './schemaJson.css';
 import _ from 'underscore';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { JSONPATH_JOIN_CHAR, SCHEMA_TYPE } from '../../utils.js';
 const Option = Select.Option;
-import AceEditor from '../AceEditor/AceEditor.js';
 import LocalProvider from '../LocalProvider/index.js';
 
 const changeOtherValue = (value, name, data, change) => {
@@ -548,11 +539,6 @@ const CustomItem = (props, context) => {
     <div>
       <div>{optionForm}</div>
       <div className="default-setting">{LocalProvider('all_setting')}</div>
-      <AceEditor
-        data={data}
-        mode="json"
-        onChange={e => handleInputEditor(e, context.changeCustomValue)}
-      />
     </div>
   );
 };

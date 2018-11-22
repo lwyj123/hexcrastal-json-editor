@@ -25,7 +25,6 @@ import { JSONPATH_JOIN_CHAR, SCHEMA_TYPE } from '../../utils.js';
 const InputGroup = Input.Group;
 import LocaleProvider from '../LocalProvider/index.js';
 import utils from '../../utils';
-import MockSelect from '../MockSelect/index.js';
 
 const mapping = (name, data, showEdit, showAdv) => {
   switch (data.type) {
@@ -75,14 +74,6 @@ class SchemaArray extends PureComponent {
     this.Model.changeValueAction({ key, value });
   };
 
-  // 修改mock信息
-  handleChangeMock = e => {
-    let prefix = this.getPrefix();
-    let key = [].concat(prefix, `mock`);
-    let value = e ? { mock: e } : '';
-    this.Model.changeValueAction({ key, value });
-  };
-
   // 增加子节点
   handleAddChildField = () => {
     let prefix = this.getPrefix();
@@ -119,7 +110,7 @@ class SchemaArray extends PureComponent {
         <div className="array-type">
           <Row className="array-item-type" type="flex" justify="space-around" align="middle">
             <Col
-              span={this.context.isMock ? 10 : 12}
+              span={12}
               className="col-item name-item col-item-name"
               style={this.__tagPaddingLeftStyle}
             >
@@ -156,17 +147,7 @@ class SchemaArray extends PureComponent {
                 })}
               </Select>
             </Col>
-            {this.context.isMock && (
-              <Col span={3} className="col-item col-item-mock">
-                
-                <MockSelect
-                  schema={items}
-                  showEdit={() => this.handleShowEdit('mock', items.type)}
-                  onChange={this.handleChangeMock}
-                />
-              </Col>
-            )}
-            <Col span={this.context.isMock ? 4 : 5} className="col-item col-item-desc">
+            <Col span={5} className="col-item col-item-desc">
               <Input
                 addonAfter={<Icon type="edit" onClick={() => this.handleShowEdit('description')} />}
                 placeholder={LocaleProvider('description')}
@@ -200,7 +181,6 @@ class SchemaArray extends PureComponent {
 SchemaArray.contextTypes = {
   getOpenValue: PropTypes.func,
   Model: PropTypes.object,
-  isMock: PropTypes.bool
 };
 
 class SchemaItem extends PureComponent {
@@ -243,14 +223,6 @@ class SchemaItem extends PureComponent {
     this.Model.changeValueAction({ key, value });
   };
 
-  // 修改mock 信息
-  handleChangeMock = e => {
-    let prefix = this.getPrefix();
-    let key = [].concat(prefix, `mock`);
-    let value = e ? { mock: e } : '';
-    this.Model.changeValueAction({ key, value });
-  };
-
   // 修改数据类型
   handleChangeType = e => {
     let prefix = this.getPrefix();
@@ -267,7 +239,7 @@ class SchemaItem extends PureComponent {
   };
   /*
   展示备注编辑弹窗
-  editorName: 弹窗名称 ['description', 'mock']
+  editorName: 弹窗名称 ['description']
   type: 如果当前字段是object || array showEdit 不可用
   */
   handleShowEdit = (editorName, type) => {
@@ -317,7 +289,7 @@ class SchemaItem extends PureComponent {
       <div>
         <Row type="flex" justify="space-around" align="middle">
           <Col
-            span={this.context.isMock ? 10 : 12}
+            span={12}
             className="col-item name-item col-item-name"
             style={this.__tagPaddingLeftStyle}
           >
@@ -366,25 +338,7 @@ class SchemaItem extends PureComponent {
               })}
             </Select>
           </Col>
-          {this.context.isMock && (
-            <Col span={3} className="col-item col-item-mock">
-              {/* <Input
-                addonAfter={
-                  <Icon type="edit" onClick={() => this.handleShowEdit('mock', value.type)} />
-                }
-                placeholder={LocaleProvider('mock')}
-                value={value.mock ? value.mock.mock : ''}
-                onChange={this.handleChangeMock}
-                disabled={value.type === 'object' || value.type === 'array'}
-              /> */}
-              <MockSelect
-                schema={value}
-                showEdit={() => this.handleShowEdit('mock', value.type)}
-                onChange={this.handleChangeMock}
-              />
-            </Col>
-          )}
-          <Col span={this.context.isMock ? 4 : 5} className="col-item col-item-desc">
+          <Col span={5} className="col-item col-item-desc">
             <Input
               addonAfter={<Icon type="edit" onClick={() => this.handleShowEdit('description')} />}
               placeholder={LocaleProvider('description')}
@@ -421,7 +375,6 @@ class SchemaItem extends PureComponent {
 SchemaItem.contextTypes = {
   getOpenValue: PropTypes.func,
   Model: PropTypes.object,
-  isMock: PropTypes.bool
 };
 
 class SchemaObjectComponent extends Component {
@@ -483,11 +436,9 @@ const DropPlus = (props, context) => {
   );
 
   return (
-    <Tooltip placement="top" title={LocaleProvider('add_node')}>
-      <Dropdown overlay={menu}>
-        <Icon type="plus" className="plus" />
-      </Dropdown>
-    </Tooltip>
+    <Dropdown overlay={menu}>
+      <Icon type="plus" className="plus" />
+    </Dropdown>
   );
 };
 

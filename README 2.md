@@ -33,4 +33,3 @@ render(
 | ---- | ----------- | --------- | --------- |
 | `data` | string | null | the data of editor
 | `onChange`| function | null | 
-| `showEditor` | boolean | false | 
