@@ -3,7 +3,6 @@ import React from 'react';
 
 const langs = {
   en_US: {
-    'import_json': 'Import JSON',
     'base_setting': 'Base Setting',
     'all_setting': 'Sourec Code',
     'default': 'Default',
@@ -36,7 +35,6 @@ const langs = {
     'mockLink': 'Help'
   },
   zh_CN: {
-    'import_json': '导入 json',
     'base_setting': '基础设置',
     'all_setting': '编辑源码',
     'default': '默认值',
