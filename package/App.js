@@ -347,7 +347,7 @@ class jsonSchema extends React.Component {
                 <Select
                   className="type-select-style"
                   onChange={e => this.changeType(`type`, e)}
-                  disabled={this.props.disabled}
+                  disabled={this.props.rootIsObject || this.props.disabled}
                   value={schema.type || 'object'}
                 >
                   {SCHEMA_TYPE.map((item, index) => {
@@ -375,11 +375,11 @@ class jsonSchema extends React.Component {
                 />
               </Col>
               {!this.props.disabled ? <Col span={3} className="col-item col-item-setting">
-                <span className="adv-set" onClick={() => this.showAdv([], this.props.schema)}>
+                {/* <span className="adv-set" onClick={() => this.showAdv([], this.props.schema)}>
                   <Tooltip placement="top" title={LocalProvider('adv_setting')}>
                     <Icon type="setting" />
                   </Tooltip>
-                </span>
+                </span> */}
                 {schema.type === 'object' && !this.props.disabled ? (
                   <span onClick={() => this.addChildField('properties')}>
                     <Tooltip placement="top" title={LocalProvider('add_child_node')}>
@@ -413,6 +413,7 @@ jsonSchema.childContextTypes = {
 
 jsonSchema.propTypes = {
   disabled: PropTypes.bool,
+  rootIsObject: PropTypes.bool,
   data: PropTypes.string,
   onChange: PropTypes.func,
   Model: PropTypes.object
