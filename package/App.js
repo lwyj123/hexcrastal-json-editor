@@ -19,6 +19,7 @@ const Option = Select.Option;
 const { TextArea } = Input;
 const TabPane = Tabs.TabPane;
 
+import AceEditor from './components/AceEditor/AceEditor.js';
 import './index.css';
 import _ from 'underscore';
 import { connect } from 'react-redux';
@@ -52,6 +53,12 @@ class jsonSchema extends React.Component {
     this.Model = this.props.Model.schema;
     this.jsonSchemaData = null;
     this.jsonData = null;
+  }
+  // Set default props
+  getDefaultProps() {
+    return {
+      showImportButton: false,
+    };
   }
 
   handleOk = () => {
@@ -253,6 +260,13 @@ class jsonSchema extends React.Component {
     this.Model.requireAllAction({ required: e, value: this.props.schema });
   };
 
+  // json 导入弹窗
+  showModal = () => {
+    this.setState({
+      visible: true
+    });
+  };
+
   render() {
     const {
       visible,
@@ -272,6 +286,42 @@ class jsonSchema extends React.Component {
 
     return (
       <div className="json-schema-react-editor">
+        {this.props.showImportButton ? <Button className="import-json-button" type="primary" onClick={this.showModal}>
+          {LocalProvider('import_json')}
+        </Button> : null
+        }
+        <Modal
+          maskClosable={false}
+          visible={visible}
+          title={LocalProvider('import_json')}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          className="json-schema-react-editor-import-modal"
+          okText={'ok'}
+          cancelText={LocalProvider('cancel')}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>
+              {LocalProvider('cancel')}
+            </Button>,
+            <Button key="submit" type="primary" onClick={this.handleOk}>
+              {LocalProvider('ok')}
+            </Button>
+          ]}
+        >
+          <Tabs
+            defaultActiveKey="json"
+            onChange={key => {
+              this.importJsonType = key;
+            }}
+          >
+            <TabPane tab="JSON" key="json">
+              <AceEditor data="" mode="json" onChange={this.handleImportJson} />
+            </TabPane>
+            <TabPane tab="JSON-SCHEMA" key="schema">
+              <AceEditor data="" mode="json" onChange={this.handleImportJsonSchema} />
+            </TabPane>
+          </Tabs>
+        </Modal>
         <Modal
           title={
             <div>
@@ -414,6 +464,7 @@ jsonSchema.childContextTypes = {
 jsonSchema.propTypes = {
   disabled: PropTypes.bool,
   rootIsObject: PropTypes.bool,
+  showImportButton: PropTypes.bool,
   data: PropTypes.string,
   onChange: PropTypes.func,
   Model: PropTypes.object

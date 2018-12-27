@@ -27,6 +27,7 @@ const mock = [
 const JEditor1 = jeditor();
 const JEditor2 = jeditor();
 const JEditor3 = jeditor();
+const JEditor4 = jeditor();
 
 render(
   <div>
@@ -58,6 +59,13 @@ render(
     <JEditor3
       data={''}
       rootIsObject={true}
+      onChange={e => {
+        console.log('changeValue', JSON.parse(e));
+      }}
+    />
+    <JEditor4
+      data={''}
+      showImportButton={true}
       onChange={e => {
         console.log('changeValue', JSON.parse(e));
       }}
